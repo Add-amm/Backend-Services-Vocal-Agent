@@ -1,0 +1,60 @@
+services:
+###################################################################################
+  auth-servicee:
+    build:
+      context: ./services/auth-service
+    container_name: auth-servicee
+    command: ["sh", "/app/start.sh"]
+    ports:
+      - "3000:3000"
+    depends_on:
+      - mysql
+      - medplus-redis
+    env_file:
+      - .env
+    restart: always
+###################################################################################
+  notifications-service:
+    build:
+      context: ./services/notification-service
+    container_name: notifications-service
+    command: ["npm", "start"]
+    ports:
+      - "4000:4000"
+    env_file:
+      - .env
+    restart: always
+###################################################################################
+###################################################################################
+  mysql:
+    image: mysql:8.0
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - "3306:3306"
+    env_file:
+      - .env
+    volumes:
+      - medplus-mysql-data:/var/lib/mysql
+    restart: always
+###################################################################################
+###################################################################################
+  medplus-redis:
+    image: redis:7.0-alpine
+    container_name: medplus-redis
+    ports:
+      - "6379:6379"
+    env_file:
+      - .env
+    volumes:
+      - medplus-redis-data:/data
+    restart: always
+###################################################################################
+###################################################################################
+volumes:
+  medplus-mysql-data:
+  medplus-redis-data:
