@@ -10,12 +10,10 @@ export const validateRegister = (req, res, next) => {
   const {
     nom_complet,
     email,
-    phone_num,
-    mdp,
-    confirm_password
+    phone_num
   } = req.body;
 
-  if(!nom_complet || !email || !phone_num || !mdp || !confirm_password){
+  if(!nom_complet || !email || !phone_num ){
       return res.status(400).json({ message: 'Tous les champs sont requis.' });
   }
   next();

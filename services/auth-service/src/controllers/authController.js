@@ -4,6 +4,7 @@ import jwt from 'jsonwebtoken';
 import { User } from '../models/user.js';
 import { generateUserId } from '../utils/generate_id.js';
 import { addUserToken, blacklistUserTokens } from '../middlewares/tokens.js';
+import { Op } from 'sequelize';
 
 dotenv.config();
 
@@ -76,7 +77,6 @@ export const singup = async (req, res) => {
         mdp: hashedPassword
       });
 
-      // Retourne uniquement le mot de passe généré
       res.status(201).json({ message: "Utilisateur créer avec succés." });
 
     } catch (error) {
@@ -102,7 +102,7 @@ export const profile = async (req, res) => {
 // ==================== UPDATE User ====================
 export const updateUser = async (req, res) => {
   try {
-      const { id } = req.params;
+      const id = req.user.id;
 
       // Récupération des champs à mettre à jour
       const {
@@ -118,7 +118,15 @@ export const updateUser = async (req, res) => {
       }
 
       // Vérifie si username ou email sont déjà utilisés par un autre utilisateur
-      const existingUser = await User.findOne({ where: { email, bloquer: false }});
+      const existingUser = await User.findOne(
+                                              {where: {
+                                                  email,
+                                                  bloquer: false,
+                                                  id: {
+                                                    [Op.ne]: id
+                                                  }
+                                                }
+                                              });
 
       if (existingUser) {
           return res.status(400).json({ message: "Email déjà utilisé." });

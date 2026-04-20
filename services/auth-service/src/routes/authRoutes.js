@@ -8,7 +8,7 @@ import { login, logout, profile, singup, updateThisUserPassword, updateUser } fr
 router.post('/login', login);
 router.post('/register', validateRegister, singup);
 router.get('/profile', authenticateToken, profile);
-router.put('/user/:id', authenticateToken, validateUpdate, updateUser);
+router.put('/self-user', authenticateToken, validateUpdate, updateUser);
 router.post('/user/changepassword', authenticateToken, updateThisUserPassword);
 router.post('/logout', authenticateToken,  logout);
 
