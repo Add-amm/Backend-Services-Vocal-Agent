@@ -71,7 +71,7 @@ This will build and start all services, including MySQL and Redis.
   - `POST /auth/login` — Authenticate user and get JWT
   - `POST /auth/register` — Sign-up as a new user
   - `GET /auth/profile` — Get authenticated user profile
-  - `PUT /auth/user/:id` — Update the user profile
+  - `PUT /auth/self-user` — Update the user profile
   - `POST /auth//user/changepassword` — Update the user's password
   - `POST /auth/logout` — Invalidate JWT
 
